@@ -1,0 +1,15 @@
+{
+  "name": "socketChat",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.10.0",
+    "socket.io": "^1.1.0"
+  }
+}
