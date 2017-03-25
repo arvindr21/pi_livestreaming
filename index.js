@@ -7,6 +7,7 @@ var path = require('path');
 
 var spawn = require('child_process').spawn;
 var proc;
+var _compressing = false;
 
 app.use('/', express.static(path.join(__dirname, 'stream')));
 
@@ -30,6 +31,7 @@ io.on('connection', function(socket) {
       app.set('watchingFile', false);
       if (proc) proc.kill();
       fs.unwatchFile('./stream/image_stream.jpg');
+      fs.unwatchFile('./stream/compressed.jpg');
     }
   });
 
@@ -54,19 +56,30 @@ function stopStreaming() {
 function startStreaming(io) {
 
   if (app.get('watchingFile')) {
-    io.sockets.emit('liveStream', 'image_stream.jpg?_t=' + (Math.random() * 100000));
+    io.sockets.emit('liveStream', 'compressed.jpg?_t=' + (Math.random() * 100000));
     return;
   }
 
   var args = ["-w", "640", "-h", "480", "-o", "./stream/image_stream.jpg", "-t", "999999999", "-tl", "100"];
-  proc = spawn('raspistill', args);
+
+  if(!_compressing){
+    proc = spawn('raspistill', args);
+  }
 
   console.log('Watching for changes...');
 
   app.set('watchingFile', true);
 
   fs.watchFile('./stream/image_stream.jpg', function(current, previous) {
-    io.sockets.emit('liveStream', 'image_stream.jpg?_t=' + (Math.random() * 100000));
-  })
+    // console.log('compressing...');
+    _compressing = true;
+    var convert = spawn('convert', ["./stream/image_stream.jpg", "-quality", "85", "-resize", "640x480\\>", "./stream/compressed.jpg"]);
+  });
+
+  fs.watchFile('./stream/compressed.jpg', function(c, p){
+    // console.log('compressed...');
+    _compressing = false;
+    io.sockets.emit('liveStream', 'compressed.jpg?_t=' + (Math.random() * 100000));
+  });
 
 }
