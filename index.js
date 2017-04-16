@@ -5,7 +5,7 @@ var io = require('socket.io')(http);
 var fs = require('fs');
 var path = require('path');
 var port = 27020;
-var converQuality = "85";
+var convertQuality = "85";
 
 var spawn = require('child_process').spawn;
 var proc;
@@ -75,7 +75,15 @@ function startStreaming(io) {
   fs.watchFile('./stream/image_stream.jpg', function(current, previous) {
     // console.log('compressing...');
     _compressing = true;
-    var convert = spawn('convert', ["./stream/image_stream.jpg", "-quality", convertQuality, "-resize", "640x480\\>", "./stream/compressed.jpg"]);
+    var convert = spawn('convert',
+      [
+        "./stream/image_stream.jpg",
+        "-quality",
+        convertQuality,
+        "-resize",
+        "640x480\\>",
+        "./stream/compressed.jpg"
+      ]);
   });
 
   fs.watchFile('./stream/compressed.jpg', function(c, p){
