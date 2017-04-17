@@ -14,5 +14,5 @@ using shell command : convert ...
 
 ## Change the convert quality (string)
 ```
-var converQuality = "65";
+var convertQuality = "65";
 ```
