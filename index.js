@@ -76,7 +76,9 @@ function startStreaming(io) {
     console.log('compressing...');
     _compressing = true;
     
-    fs.unlinkSync('./stream/compressed.jpg');
+    if(fs.existsSync('./stream/compressed.jpg')) {
+      fs.unlinkSync('./stream/compressed.jpg');
+    }
 
     spawn('convert',
       [
