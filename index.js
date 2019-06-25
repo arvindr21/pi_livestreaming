@@ -75,6 +75,9 @@ function startStreaming(io) {
   fs.watchFile('./stream/image_stream.jpg', function(current, previous) {
     console.log('compressing...');
     _compressing = true;
+    
+    fs.unlinkSync('./stream/compressed.jpg');
+
     spawn('convert',
       [
         "/var/www/pi_livestreaming/stream/image_stream.jpg",
