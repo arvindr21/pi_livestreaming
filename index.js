@@ -73,11 +73,11 @@ function startStreaming(io) {
   app.set('watchingFile', true);
 
   fs.watchFile('./stream/image_stream.jpg', function(current, previous) {
-    // console.log('compressing...');
+    console.log('compressing...');
     _compressing = true;
-    var convert = spawn('convert',
+    spawn('convert',
       [
-        "./stream/image_stream.jpg",
+        "/var/www/pi_livestreaming/stream/image_stream.jpg",
         "-quality",
         convertQuality,
         "-resize",
@@ -87,7 +87,7 @@ function startStreaming(io) {
   });
 
   fs.watchFile('./stream/compressed.jpg', function(c, p){
-    // console.log('compressed...');
+    console.log('compressed...');
     _compressing = false;
     io.sockets.emit('liveStream', 'compressed.jpg?_t=' + (Math.random() * 100000));
   });
